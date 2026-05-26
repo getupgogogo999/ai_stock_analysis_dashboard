@@ -4,8 +4,8 @@
 
 ## 在线访问 URL
 
-> 部署后请在此处填写 Render 线上地址，例如：
-> **https://ai-stock-dashboard.onrender.com**
+> Render 线上地址：
+> **https://ai-stock-analysis-dashboard-qnfc.onrender.com/**
 
 ## 安全说明（API 密钥保护）
 
