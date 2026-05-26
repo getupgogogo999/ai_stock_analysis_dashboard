@@ -1,0 +1,25 @@
+# Dependencies & build output
+node_modules/
+dist/
+client/dist/
+
+# ── 密钥文件（绝不要提交到 GitHub）──
+.env
+.env.local
+.env.development
+.env.production
+.env.development.local
+.env.production.local
+.env.*.local
+
+# 允许提交模板文件（仅含占位符，无真实密钥）
+!.env.example
+
+# Logs & OS
+*.log
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/

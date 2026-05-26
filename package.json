@@ -1,0 +1,31 @@
+{
+  "name": "ai-stock-analysis-dashboard",
+  "version": "1.0.0",
+  "private": true,
+  "description": "AI Stock Analysis Dashboard - Full-stack interview project",
+  "scripts": {
+    "install:all": "npm install && cd client && npm install",
+    "build": "cd client && npm install && npm run build",
+    "start": "node server/index.js",
+    "dev:server": "node --watch server/index.js",
+    "dev:client": "cd client && npm run dev",
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
+    "verify:security": "node scripts/verify-security.js",
+    "check:env": "node scripts/check-env.js",
+    "smoke:test": "node scripts/smoke-test.js",
+    "postinstall": "node -e \"try{require('fs').copyFileSync('.env.example','.env',{flag:'wx'})}catch(e){}\""
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.49.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "undici": "^8.3.0"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
