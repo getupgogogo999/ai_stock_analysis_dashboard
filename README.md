@@ -1,6 +1,6 @@
 # AI Stock Analysis Dashboard
 
-> 面试题：AI 股票分析仪表盘（简化版）— 全栈应用，使用 LLM 分析股票数据并存储至 Supabase。
+> AI 股票分析仪表盘（简化版）— 全栈应用，使用 LLM 分析股票数据并存储至 Supabase。
 
 ## 在线访问 URL
 
