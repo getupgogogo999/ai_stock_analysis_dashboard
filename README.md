@@ -153,45 +153,6 @@ body: JSON.stringify({
 }
 ```
 
-## Debug 记录：CORS 跨域问题
-
-### 问题描述
-
-本地开发时，前端运行在 `http://localhost:5173`，后端在 `http://localhost:3001`。直接在 React 中调用 `fetch('http://localhost:3001/api/stock/AAPL')` 时，浏览器控制台报错：
-
-```
-Access to fetch at 'http://localhost:3001/api/stock/AAPL' from origin 'http://localhost:5173'
-has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present.
-```
-
-### 排查过程（使用 Cursor AI）
-
-1. 将报错信息粘贴给 Cursor，AI 指出这是典型的 CORS 跨域问题
-2. AI 建议两种方案：
-   - **方案 A**：后端添加 `cors` 中间件（适合生产环境前后端同域部署）
-   - **方案 B**：Vite dev server 配置 proxy 代理（适合本地开发，避免跨域）
-
-### 最终修复
-
-**后端**（`server/index.js`）添加 cors 中间件：
-
-```javascript
-const cors = require("cors");
-app.use(cors());
-```
-
-**前端**（`client/vite.config.js`）配置开发代理：
-
-```javascript
-server: {
-  proxy: {
-    "/api": { target: "http://localhost:3001", changeOrigin: true },
-  },
-},
-```
-
-前端 API 请求统一使用相对路径 `/api/...`，开发环境走 Vite 代理，生产环境由 Express 同域服务，彻底消除 CORS 问题。
-
 ## API 接口
 
 | 方法 | 路径 | 说明 |
