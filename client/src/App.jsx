@@ -152,18 +152,18 @@ export default function App() {
           <div className="brand">
             <div className="brand-mark">
               <span className="brand-glow" />
-              AX
+              AI
             </div>
             <div>
               <h1>
-                Apex <span className="gradient-text">Stock AI</span>
+                智股 <span className="gradient-text">AI 仪表盘</span>
               </h1>
-              <p>Real-time markets · ML forecast · GPT insights</p>
+              <p>实时行情 · ML 融合预测 · GPT 智能分析</p>
             </div>
           </div>
           <div className="topbar-pills">
-            <span className="pill pill-cyan">Live Data</span>
-            <span className="pill pill-violet">ML Fusion</span>
+            <span className="pill pill-cyan">实时数据</span>
+            <span className="pill pill-violet">ML 融合</span>
             <span className="pill pill-amber">GPT-4o-mini</span>
           </div>
         </header>

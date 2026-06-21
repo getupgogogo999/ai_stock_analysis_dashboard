@@ -1,8 +1,8 @@
 const STEPS = [
-  { key: "data", label: "Market Data", sub: "Finnhub / Yahoo", color: "cyan" },
-  { key: "ml", label: "ML Ensemble", sub: "Dual-model fusion", color: "violet" },
-  { key: "llm", label: "GPT Analysis", sub: "Structured JSON", color: "amber" },
-  { key: "store", label: "Supabase", sub: "History store", color: "rose" },
+  { key: "data", label: "行情数据", sub: "Finnhub / Yahoo", color: "cyan" },
+  { key: "ml", label: "ML 融合", sub: "双模型加权融合", color: "violet" },
+  { key: "llm", label: "GPT 分析", sub: "结构化 JSON", color: "amber" },
+  { key: "store", label: "Supabase", sub: "历史存储", color: "rose" },
 ];
 
 export default function PipelineStrip({ activeStep = "data", mlOnline = false }) {
@@ -11,11 +11,11 @@ export default function PipelineStrip({ activeStep = "data", mlOnline = false })
       <div className="pipeline-title">
         <span className="pipeline-icon">⚡</span>
         <div>
-          <h3>Intelligence Pipeline</h3>
-          <p>Data → ML Fusion → LLM → Persistent Storage</p>
+          <h3>智能分析流水线</h3>
+          <p>数据 → ML 融合 → LLM → 持久化存储</p>
         </div>
         <span className={`ml-status ${mlOnline ? "online" : "offline"}`}>
-          {mlOnline ? "● ML Ready" : "○ ML Unavailable"}
+          {mlOnline ? "● ML 就绪" : "○ ML 不可用"}
         </span>
       </div>
       <div className="pipeline-steps">

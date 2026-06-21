@@ -17,8 +17,8 @@ export default function StockInput({
   return (
     <form className="glass-card stock-input premium-border" onSubmit={handleSubmit}>
       <div className="input-header">
-        <label htmlFor="symbol">Ticker Symbol</label>
-        <span className="input-chip">US Equities</span>
+        <label htmlFor="symbol">股票代码</label>
+        <span className="input-chip">美股</span>
       </div>
       <div className="input-row">
         <input
@@ -30,7 +30,7 @@ export default function StockInput({
           disabled={busy}
         />
         <button type="submit" className="btn-ghost" disabled={disabled || busy}>
-          {loading.fetch ? "Loading…" : "Get Quote"}
+          {loading.fetch ? "加载中…" : "获取行情"}
         </button>
         <button
           type="button"
@@ -38,7 +38,7 @@ export default function StockInput({
           onClick={onPredict}
           disabled={disabled || busy}
         >
-          {loading.predict ? "Forecasting…" : "ML Forecast"}
+          {loading.predict ? "预测中…" : "ML 预测"}
         </button>
         <button
           type="button"
@@ -46,10 +46,10 @@ export default function StockInput({
           onClick={onAnalyze}
           disabled={disabled || busy}
         >
-          {loading.analyze ? "Analyzing…" : "AI Analyze"}
+          {loading.analyze ? "分析中…" : "AI 分析"}
         </button>
       </div>
-      <p className="hint">Pipeline: Market Data → Dual-Model Fusion → GPT → Supabase</p>
+      <p className="hint">数据流：Finnhub → ML 双模型融合 → GPT-4o-mini → Supabase</p>
     </form>
   );
 }

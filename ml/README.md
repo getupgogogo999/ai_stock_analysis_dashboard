@@ -1,32 +1,31 @@
-# PyTorch ML 服务（面试演示）
+# ML 预测服务（可选，本地开发）
 
-## 安装（首次）
+FastAPI 双模型融合预测服务，本地开发时由 Node 后端自动启动。
+
+## 安装
 
 ```bash
 cd ml
 pip install -r requirements.txt
+# 或项目根目录：npm run setup:ml
 ```
 
 ## 启动
 
 ```bash
-# 项目根目录
 npm run dev:ml
+# 或由 npm run dev 时后端自动拉起（:8000）
 ```
 
-或 Windows 一键三端：`start-dev.bat`
+## 模型说明
 
-## 架构
+- **LSTM**：趋势捕捉
+- **GRU**：动量捕捉
+- **融合**：0.5 × LSTM + 0.5 × GRU
 
-- **LSTM**：捕捉较长周期趋势
-- **GRU**：捕捉短期动量
-- **Fusion**：0.5 × LSTM + 0.5 × GRU（Model Stitching / Ensemble）
-
-Node 后端 `GET /api/stock/:symbol/predict` 调用本服务，前端展示虚线预测 K 线。
+> Render 线上使用 Node 内置 Cloud Ensemble，无需部署本服务。
 
 ## 接口
 
 - `GET /health`
-- `POST /predict` — body: `{ symbol, points: [{date, close}], horizon: 10 }`
-
-首次预测约 15–30 秒（CPU 快速训练）。
+- `POST /predict` — `{ symbol, points: [{date, close}], horizon: 10 }`

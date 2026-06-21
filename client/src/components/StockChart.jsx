@@ -11,10 +11,10 @@ import {
 } from "recharts";
 
 const RANGES = [
-  { key: "1m", label: "1M" },
-  { key: "3m", label: "3M" },
-  { key: "6m", label: "6M" },
-  { key: "1y", label: "1Y" },
+  { key: "1m", label: "1月" },
+  { key: "3m", label: "3月" },
+  { key: "6m", label: "6月" },
+  { key: "1y", label: "1年" },
 ];
 
 function formatPrice(value) {
@@ -60,16 +60,16 @@ function ChartTooltip({ active, payload }) {
     <div className="chart-tooltip">
       <div className="chart-tooltip-date">
         {p.date}
-        {p.isPredicted && <span className="forecast-tag"> Forecast</span>}
+        {p.isPredicted && <span className="forecast-tag"> 预测</span>}
       </div>
       {p.actual != null && (
-        <div className="chart-tooltip-row">Close {formatPrice(p.actual)}</div>
+        <div className="chart-tooltip-row">收盘 {formatPrice(p.actual)}</div>
       )}
       {p.forecast != null && p.isPredicted && (
         <>
-          <div className="chart-tooltip-row forecast">Fused {formatPrice(p.forecast)}</div>
+          <div className="chart-tooltip-row forecast">融合 {formatPrice(p.forecast)}</div>
           <div className="chart-tooltip-row muted">
-            Trend {formatPrice(p.trend)} · Momentum {formatPrice(p.momentum)}
+            趋势 {formatPrice(p.trend)} · 动量 {formatPrice(p.momentum)}
           </div>
         </>
       )}
@@ -95,9 +95,9 @@ export default function StockChart({
       <div className="chart-header">
         <div>
           <h2>
-            {symbol} <span className="gradient-text-sm">Price Action</span>
+            {symbol} <span className="gradient-text-sm">价格走势</span>
           </h2>
-          <p className="subtitle">Solid = historical close · Dashed = ensemble forecast</p>
+          <p className="subtitle">实线 = 历史收盘 · 虚线 = ML 融合预测</p>
         </div>
         <div className="range-tabs">
           {RANGES.map((r) => (
@@ -115,18 +115,18 @@ export default function StockChart({
       </div>
 
       <div className="chart-legend">
-        <span><i className="dot actual" /> Historical</span>
-        {prediction && <span><i className="dot forecast" /> Forecast</span>}
+        <span><i className="dot actual" /> 历史</span>
+        {prediction && <span><i className="dot forecast" /> 预测</span>}
       </div>
 
       <div className="chart-container">
         {loading ? (
           <div className="chart-placeholder">
             <div className="spinner" />
-            Loading chart data…
+            加载走势数据…
           </div>
         ) : !series.length ? (
-          <div className="chart-placeholder">No chart data available</div>
+          <div className="chart-placeholder">暂无走势数据</div>
         ) : (
           <ResponsiveContainer width="100%" height={340}>
             <ComposedChart data={series} margin={{ top: 8, right: 12, left: 0, bottom: 0 }}>
@@ -168,7 +168,7 @@ export default function StockChart({
                   x={splitDate}
                   stroke="#c084fc"
                   strokeDasharray="4 4"
-                  label={{ value: "Forecast →", fill: "#e9d5ff", fontSize: 11, position: "insideTopRight" }}
+                  label={{ value: "预测 →", fill: "#e9d5ff", fontSize: 11, position: "insideTopRight" }}
                 />
               )}
               <Area

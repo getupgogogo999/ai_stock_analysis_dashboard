@@ -1,73 +1,65 @@
-# AI Stock Analysis Dashboard
+# AI 股票分析仪表盘
 
-> AI 股票分析仪表盘（简化版）— 全栈应用，使用 LLM 分析股票数据并存储至 Supabase。
+> 全栈 AI 应用：实时行情 → ML 双模型融合预测 → GPT 结构化分析 → Supabase 持久化存储。
 
-## 在线访问 URL
+## 在线访问
 
-> Render 线上地址：
-> **https://ai-stock-analysis-dashboard-qnfc.onrender.com/**
+**Render 部署地址：** https://ai-stock-analysis-dashboard-qnfc.onrender.com/
 
-## 安全说明（API 密钥保护）
-
-**所有 API 密钥只放在 `.env` 文件中，绝不在代码里硬编码，也不会上传到 GitHub。**
-
-| 规则 | 说明 |
-|------|------|
-| `.env` | 存放真实密钥，**已被 `.gitignore` 忽略**，不会提交 |
-| `.env.example` | 仅含占位符模板，**可以安全提交**到 GitHub |
-| 前端 | **不包含任何 API Key**，只调用后端 `/api` 接口 |
-| 后端 | 通过 `process.env` 读取密钥，仅在服务器内存中使用 |
-| Render 部署 | 在 Render Dashboard 的 Environment 中配置密钥，不写入代码 |
-
-本地首次使用时：
-
-```bash
-copy .env.example .env    # Windows
-# 然后编辑 .env，填入你的真实密钥（保存后运行 npm run check:env 验证）
-```
-
-**`.env` 填写格式示例（请替换为你自己的真实密钥）：**
-
-```env
-FINNHUB_API_KEY=xxxxxxxxxxxxxxxx
-OPENAI_API_KEY=sk-xxxxxxxxxxxxxxxx
-SUPABASE_URL=https://xxxxx.supabase.co
-SUPABASE_ANON_KEY=eyJxxxxxxxxxxxxxxxx
-```
-
-验证密钥是否配置正确（不会打印密钥内容）：
-
-```bash
-npm run check:env
-npm run smoke:test
-```
-
-推送 GitHub 前请确认：
-
-```bash
-git status   # 确认 .env 不在待提交列表中
-```
+---
 
 ## 功能概览
 
 | 功能 | 说明 |
 |------|------|
-| 数据获取 | 输入股票代码（如 AAPL），调用 Finnhub 免费 API 获取实时行情 |
-| K 线图表 | 历史走势 + PyTorch 融合预测虚线（本地） |
-| ML 预测 | LSTM + GRU 模型缝合，预测未来 10 日 K 线（本地 PyTorch） |
-| AI 分析 | 点击按钮调用 OpenAI LLM，可结合 ML 预测结果 |
-| 数据存储 | 分析结果自动写入 Supabase `stock_analyses` 表 |
+| 实时行情 | 输入美股代码（如 AAPL），通过 Finnhub 获取报价与指标 |
+| K 线图表 | 支持 1 月 / 3 月 / 6 月 / 1 年，历史走势 + ML 预测虚线 |
+| ML 预测 | 趋势模型 + 动量模型 50/50 融合，预测未来 10 个交易日 |
+| AI 分析 | 调用 OpenAI GPT-4o-mini，返回 summary / sentiment / risk_level |
+| 数据存储 | 分析结果写入 Supabase `stock_analyses` 表 |
 | 历史记录 | 页面底部展示最近分析记录 |
+
+**ML 说明：**
+
+- **Render 线上**：内置 Cloud Ensemble，打开网站即可使用 ML 预测，无需本地服务
+- **本地开发**：可选启动 `ml/` 目录下的 FastAPI 服务（后端会自动拉起），或使用 Cloud Ensemble 兜底
+
+---
 
 ## 技术栈
 
-- **前端**：React + Vite
-- **后端**：Node.js + Express
-- **股票数据**：Finnhub API（免费）
-- **LLM**：OpenAI API（`response_format: json_object` 强制 JSON 输出）
-- **ML**：PyTorch LSTM + GRU Ensemble（本地 FastAPI，开发时后端自动启动）
-- **数据库**：Supabase (PostgreSQL)
-- **部署**：Render.com
+| 层级 | 技术 |
+|------|------|
+| 前端 | React + Vite + Recharts |
+| 后端 | Node.js + Express（BFF 代理） |
+| 行情数据 | Finnhub API（K 线失败时降级 Yahoo Finance） |
+| LLM | OpenAI API（`response_format: json_object`） |
+| ML | Cloud Ensemble（线上）/ 可选 FastAPI 服务（本地） |
+| 数据库 | Supabase（PostgreSQL） |
+| 部署 | GitHub + Render.com |
+
+---
+
+## 安全说明（API 密钥保护）
+
+**所有 API 密钥只放在 `.env` 或 Render Environment 中，绝不在代码里硬编码，也不会上传到 GitHub。**
+
+| 规则 | 说明 |
+|------|------|
+| `.env` | 存放真实密钥，已被 `.gitignore` 忽略 |
+| `.env.example` | 仅含占位符，可安全提交 |
+| 前端 | 不包含任何 API Key，只调用 `/api` |
+| 后端 | 通过 `process.env` 读取密钥 |
+| Render | 在 Dashboard → Environment 中配置密钥 |
+
+推送前检查：
+
+```bash
+npm run verify:security
+git status   # 确认 .env 不在待提交列表
+```
+
+---
 
 ## 本地开发
 
@@ -79,84 +71,72 @@ npm run install:all
 
 ### 2. 配置环境变量
 
-复制 `.env.example` 为 `.env` 并填入密钥：
-
 ```bash
-cp .env.example .env
+copy .env.example .env    # Windows
+# 编辑 .env 填入真实密钥
+npm run check:env
 ```
 
 | 变量 | 获取方式 |
 |------|----------|
-| `FINNHUB_API_KEY` | [finnhub.io/register](https://finnhub.io/register) 免费注册 |
+| `FINNHUB_API_KEY` | [finnhub.io/register](https://finnhub.io/register) |
 | `OPENAI_API_KEY` | [platform.openai.com/api-keys](https://platform.openai.com/api-keys) |
-| `SUPABASE_URL` | [supabase.com](https://supabase.com) 创建项目后获取 |
-| `SUPABASE_ANON_KEY` | Supabase 项目 Settings → API |
+| `SUPABASE_URL` | [supabase.com](https://supabase.com) 项目 Settings → API |
+| `SUPABASE_ANON_KEY` | 同上 |
 
-### 3. 初始化 Supabase 数据库
+### 3. 初始化 Supabase
 
-在 Supabase SQL Editor 中执行 `supabase/schema.sql`。
+在 Supabase SQL Editor 中执行 `supabase/schema.sql`。  
+若 API 返回 401，再执行 `supabase/fix-permissions.sql`。
 
-### 4. 安装 PyTorch ML 依赖（首次）
-
-```bash
-npm run setup:ml
-```
-
-### 5. 一键启动（推荐）
+### 4. 启动（一键）
 
 ```bash
 npm run dev
 # 或 Windows 双击 start-dev.bat
 ```
 
-后端会自动启动 PyTorch ML 服务（:8000），前端 :5173 代理 `/api`。
-
 浏览器访问 http://localhost:5173
 
 **演示顺序：** 获取行情 → ML 预测 → AI 分析
 
-> ML 预测在 **Render 线上默认可用**（内置 Cloud Ensemble，无需本地 PyTorch）。  
-> 本地开发可选启动 PyTorch 服务（`npm run dev:ml` 或由后端自动拉起）获得真实 PyTorch 训练。
+### 5. 可选：本地 ML 服务依赖
+
+```bash
+npm run setup:ml
+```
+
+---
 
 ## 部署到 Render
 
 1. 将代码推送到 GitHub
-2. 在 [Render Dashboard](https://dashboard.render.com) 创建 **Web Service**
-3. 连接 GitHub 仓库，Render 会自动读取 `render.yaml`
-4. 在 Environment 中添加所有 `.env.example` 中的密钥
-5. 部署完成后将 URL 填入本文档顶部
+2. 在 [Render Dashboard](https://dashboard.render.com) 创建 Web Service
+3. 连接 GitHub 仓库，Render 读取 `render.yaml`
+4. 在 Environment 中配置 Finnhub / OpenAI / Supabase 密钥
+5. 部署完成后访问线上 URL
 
-## LLM Prompt 设计（强制 JSON 输出）
+---
 
-以下代码位于 `server/services/llmService.js`，通过 **System Prompt 约束字段** + **OpenAI `response_format: json_object`** 双重保障，确保 LLM 返回合法 JSON：
+## API 接口
 
-```javascript
-const ANALYSIS_PROMPT = `You are a professional stock market analyst. Analyze the provided stock market data and return your assessment.
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| GET | `/api/health` | 健康检查 |
+| GET | `/api/ml/health` | ML 服务状态 |
+| GET | `/api/stock/:symbol` | 获取股票行情 |
+| GET | `/api/stock/:symbol/chart?range=3m` | K 线数据（1m/3m/6m/1y） |
+| GET | `/api/stock/:symbol/predict?horizon=10` | ML 融合预测 |
+| POST | `/api/analyze` | AI 分析并存储 `{ "symbol": "AAPL" }` |
+| GET | `/api/history` | 历史分析记录 |
 
-Rules:
-1. Respond ONLY with valid JSON — no markdown, no code fences, no extra text.
-2. Use exactly these three keys: "summary", "sentiment", "risk_level".
-3. "summary": 2-4 sentences covering price trend, valuation context, and a brief outlook.
-4. "sentiment": must be exactly one of: "Bullish", "Neutral", "Bearish".
-5. "risk_level": must be exactly one of: "Low", "Medium", "High".
+---
 
-Example output:
-{"summary":"Apple shows moderate upward momentum...","sentiment":"Bullish","risk_level":"Medium"}`;
+## LLM Prompt 设计
 
-// API 调用时强制 JSON 模式
-body: JSON.stringify({
-  model: "gpt-4o-mini",
-  response_format: { type: "json_object" },  // ← 强制 JSON
-  messages: [
-    { role: "system", content: ANALYSIS_PROMPT },
-    { role: "user", content: userMessage },
-  ],
-})
-```
+位于 `server/services/llmService.js`，通过 **System Prompt** + **`response_format: json_object`** 强制 JSON 输出，后端 `validateAnalysis` 校验字段合法性。
 
-后端还会对返回结果做 schema 校验（`validateAnalysis`），确保 `sentiment` 和 `risk_level` 枚举值合法。
-
-### 期望的 JSON 格式
+期望格式：
 
 ```json
 {
@@ -166,34 +146,55 @@ body: JSON.stringify({
 }
 ```
 
-## API 接口
+---
 
-| 方法 | 路径 | 说明 |
-|------|------|------|
-| GET | `/api/health` | 健康检查 |
-| GET | `/api/stock/:symbol` | 获取股票行情 |
-| POST | `/api/analyze` | AI 分析并存储 `{ "symbol": "AAPL" }` |
-| GET | `/api/history` | 获取历史分析记录 |
+## ML 融合预测
+
+- **趋势模型（Trend）**：EMA + 斜率，捕捉中长期走势
+- **动量模型（Momentum）**：线性回归，捕捉短期动量
+- **融合方式**：50/50 加权平均，输出未来 10 日预测曲线
+
+实现位置：
+
+- 线上：`server/services/forecastService.js`（Cloud Ensemble）
+- 本地可选：`ml/ensemble.py`（FastAPI）
+
+---
 
 ## 项目结构
 
 ```
 project1/
-├── client/                 # React 前端
-│   └── src/
-│       ├── components/     # UI 组件
-│       ├── api.js          # API 调用封装
-│       └── App.jsx
-├── server/                 # Express 后端
+├── client/                      # React 前端
+│   └── src/components/          # UI 组件
+├── server/                      # Express 后端
 │   ├── routes/api.js
-│   └── services/
-│       ├── stockService.js   # Finnhub 数据
-│       ├── llmService.js     # OpenAI 分析
-│       └── supabaseClient.js # Supabase 存储
-├── supabase/schema.sql     # 数据库建表 SQL
-├── render.yaml             # Render 部署配置
+│   ├── services/
+│   │   ├── stockService.js      # Finnhub / Yahoo 行情
+│   │   ├── llmService.js        # OpenAI 分析
+│   │   ├── mlService.js         # ML 预测调度
+│   │   ├── forecastService.js   # Cloud Ensemble
+│   │   └── supabaseClient.js    # Supabase 存储
+│   └── mlProcess.js             # 本地 ML 自动启动
+├── ml/                          # 可选 FastAPI ML 服务
+├── supabase/schema.sql
+├── scripts/                     # 检查与安全脚本
+├── render.yaml
 └── README.md
 ```
+
+---
+
+## 常见问题
+
+| 问题 | 处理 |
+|------|------|
+| Supabase 写入失败 | Dashboard 中 Resume project，或执行 fix-permissions.sql |
+| ML 预测报错 | 线上应自动可用；本地检查 `npm run dev` 是否正常 |
+| OpenAI 超时 | 本地 `.env` 配置 `HTTPS_PROXY` |
+| Finnhub K 线 403 | 自动降级 Yahoo Finance |
+
+---
 
 ## License
 
