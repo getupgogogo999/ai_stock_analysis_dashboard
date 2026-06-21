@@ -21,7 +21,11 @@ async function saveAnalysis(record) {
     .select()
     .single();
 
-  if (error) throw new Error(`Supabase insert failed: ${error.message}`);
+  if (error) {
+    throw new Error(
+      `Supabase insert failed: ${error.message || error.code || "check Supabase project is resumed"}`
+    );
+  }
   return data;
 }
 

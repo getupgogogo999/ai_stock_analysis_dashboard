@@ -11,7 +11,7 @@ export default function StockDataCard({ data }) {
   const isUp = data.change >= 0;
 
   return (
-    <section className="card stock-card">
+    <section className="glass-card stock-card">
       <div className="card-header">
         <div>
           <h2>{data.symbol}</h2>

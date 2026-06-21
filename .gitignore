@@ -3,6 +3,11 @@ node_modules/
 dist/
 client/dist/
 
+# Python
+__pycache__/
+*.py[cod]
+ml/.venv/
+
 # ── 密钥文件（绝不要提交到 GitHub）──
 .env
 .env.local

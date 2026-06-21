@@ -12,7 +12,7 @@ const RISK_CLASS = {
 
 export default function AnalysisResult({ analysis }) {
   return (
-    <section className="card analysis-card">
+    <section className="glass-card analysis-card">
       <h2>AI 分析结果</h2>
 
       <div className="badges">

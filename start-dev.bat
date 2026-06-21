@@ -1,25 +1,15 @@
 @echo off
-REM 一键启动开发环境（需先安装 Node.js 并配置 .env）
-echo === 安全检查 ===
-node scripts\verify-security.js
-if errorlevel 1 exit /b 1
-
+title AI Stock Dashboard - Dev
 echo.
-echo === 检查 .env 密钥 ===
-node scripts\check-env.js
-if errorlevel 1 exit /b 1
-
+echo [1/3] Starting PyTorch ML service on :8000 ...
+start "ML Service" cmd /k "cd /d %~dp0ml && pip install -r requirements.txt -q && python -m uvicorn app:app --host 127.0.0.1 --port 8000"
+timeout /t 3 /nobreak >nul
+echo [2/3] Starting backend on :3001 ...
+start "Backend" cmd /k "cd /d %~dp0 && npm run dev:server"
+timeout /t 2 /nobreak >nul
+echo [3/3] Starting frontend on :5173 ...
+start "Frontend" cmd /k "cd /d %~dp0 && npm run dev:client"
 echo.
-echo === 安装依赖 ===
-call npm run install:all
-if errorlevel 1 exit /b 1
-
-echo.
-echo === API 连接测试 ===
-node scripts\smoke-test.js
-if errorlevel 1 exit /b 1
-
-echo.
-echo === 启动后端 (port 3001) ===
-echo 请另开一个终端运行: npm run dev:client
-start "Stock API Server" cmd /k npm run dev:server
+echo Open http://localhost:5173
+echo Demo flow: 获取行情 -^> ML 预测 -^> AI 分析
+pause

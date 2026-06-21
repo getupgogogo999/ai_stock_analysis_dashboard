@@ -2,8 +2,24 @@ const express = require("express");
 const { fetchStockData, fetchStockCandles } = require("../services/stockService");
 const { analyzeStock } = require("../services/llmService");
 const { saveAnalysis, getAnalysisHistory } = require("../services/supabaseClient");
+const { fetchMlPrediction, checkMlHealth } = require("../services/mlService");
 
 const router = express.Router();
+
+router.get("/ml/health", async (_req, res) => {
+  const online = await checkMlHealth();
+  res.json({ success: true, data: { online, framework: "PyTorch LSTM+GRU Ensemble" } });
+});
+
+router.get("/stock/:symbol/predict", async (req, res) => {
+  try {
+    const horizon = Math.min(20, Math.max(5, parseInt(req.query.horizon, 10) || 10));
+    const data = await fetchMlPrediction(req.params.symbol, horizon);
+    res.json({ success: true, data });
+  } catch (err) {
+    res.status(400).json({ success: false, error: err.message });
+  }
+});
 
 router.get("/stock/:symbol/chart", async (req, res) => {
   try {
@@ -32,7 +48,7 @@ router.post("/analyze", async (req, res) => {
     }
 
     const stockData = await fetchStockData(symbol);
-    const analysis = await analyzeStock(stockData);
+    const analysis = await analyzeStock(stockData, req.body.mlPrediction || null);
 
     const saved = await saveAnalysis({
       symbol: stockData.symbol,

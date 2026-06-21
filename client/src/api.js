@@ -1,7 +1,5 @@
 const API_BASE = import.meta.env.PROD ? "" : "";
 
-// 安全：前端不持有任何 API Key，所有请求走后端 /api 代理
-
 async function request(path, options = {}) {
   const res = await fetch(`${API_BASE}${path}`, {
     headers: { "Content-Type": "application/json", ...options.headers },
@@ -24,10 +22,20 @@ export function fetchStock(symbol) {
   return request(`/api/stock/${encodeURIComponent(symbol)}`);
 }
 
-export function analyzeStock(symbol) {
+export function fetchMlPrediction(symbol, horizon = 10) {
+  return request(
+    `/api/stock/${encodeURIComponent(symbol)}/predict?horizon=${horizon}`
+  );
+}
+
+export function fetchMlHealth() {
+  return request("/api/ml/health");
+}
+
+export function analyzeStock(symbol, mlPrediction = null) {
   return request("/api/analyze", {
     method: "POST",
-    body: JSON.stringify({ symbol }),
+    body: JSON.stringify({ symbol, mlPrediction }),
   });
 }
 

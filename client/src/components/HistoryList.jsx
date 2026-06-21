@@ -10,7 +10,7 @@ function formatTime(iso) {
 
 export default function HistoryList({ items }) {
   return (
-    <section className="card history-card">
+    <section className="glass-card history-card">
       <h2>历史分析记录</h2>
       <div className="history-list">
         {items.map((item) => (

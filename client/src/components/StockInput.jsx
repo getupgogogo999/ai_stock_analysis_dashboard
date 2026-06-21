@@ -2,6 +2,7 @@ export default function StockInput({
   symbol,
   onSymbolChange,
   onFetch,
+  onPredict,
   onAnalyze,
   loading,
   disabled,
@@ -11,31 +12,44 @@ export default function StockInput({
     onFetch();
   }
 
+  const busy = loading.fetch || loading.analyze || loading.predict;
+
   return (
-    <form className="stock-input" onSubmit={handleSubmit}>
-      <label htmlFor="symbol">股票代码</label>
+    <form className="glass-card stock-input" onSubmit={handleSubmit}>
+      <div className="input-header">
+        <label htmlFor="symbol">股票代码</label>
+        <span className="input-chip">US Equities</span>
+      </div>
       <div className="input-row">
         <input
           id="symbol"
           type="text"
-          placeholder="例如 AAPL, TSLA, MSFT"
+          placeholder="AAPL · TSLA · MSFT · NVDA"
           value={symbol}
           onChange={(e) => onSymbolChange(e.target.value.toUpperCase())}
-          disabled={loading.fetch || loading.analyze}
+          disabled={busy}
         />
-        <button type="submit" disabled={disabled || loading.fetch || loading.analyze}>
-          {loading.fetch ? "获取中..." : "获取行情"}
+        <button type="submit" className="btn-ghost" disabled={disabled || busy}>
+          {loading.fetch ? "加载中..." : "获取行情"}
+        </button>
+        <button
+          type="button"
+          className="btn-ml"
+          onClick={onPredict}
+          disabled={disabled || busy}
+        >
+          {loading.predict ? "训练中..." : "ML 预测"}
         </button>
         <button
           type="button"
           className="btn-primary"
           onClick={onAnalyze}
-          disabled={disabled || loading.fetch || loading.analyze}
+          disabled={disabled || busy}
         >
           {loading.analyze ? "分析中..." : "AI 分析"}
         </button>
       </div>
-      <p className="hint">支持美股代码，如 Apple (AAPL)、Tesla (TSLA)</p>
+      <p className="hint">Pipeline: Finnhub → PyTorch LSTM+GRU → GPT-4o-mini → Supabase</p>
     </form>
   );
 }

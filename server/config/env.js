@@ -39,4 +39,14 @@ function validateEnvOnStartup() {
   }
 }
 
-module.exports = { getRequired, getOptional, validateEnvOnStartup, SECRET_KEYS };
+function getMlServiceUrl() {
+  return getOptional("ML_SERVICE_URL", "http://127.0.0.1:8000");
+}
+
+module.exports = {
+  getRequired,
+  getOptional,
+  validateEnvOnStartup,
+  getMlServiceUrl,
+  SECRET_KEYS,
+};

@@ -47,12 +47,15 @@ function extractJson(text) {
   return JSON.parse(candidate);
 }
 
-async function analyzeStock(stockData) {
+async function analyzeStock(stockData, mlPrediction = null) {
   const apiKey = getRequired("OPENAI_API_KEY");
   const model = getOptional("OPENAI_MODEL", "gpt-4o-mini");
   const baseUrl = getOptional("OPENAI_BASE_URL", "https://api.openai.com/v1").replace(/\/$/, "");
 
-  const userMessage = `Analyze this stock data:\n${JSON.stringify(stockData, null, 2)}`;
+  let userMessage = `Analyze this stock data:\n${JSON.stringify(stockData, null, 2)}`;
+  if (mlPrediction?.metrics) {
+    userMessage += `\n\nPyTorch ensemble forecast (LSTM+GRU fusion, for reference only — not financial advice):\n${JSON.stringify(mlPrediction.metrics, null, 2)}\nPredicted next ${mlPrediction.horizon || 10} sessions close path: ${JSON.stringify(mlPrediction.predicted?.map((p) => p.close) || [])}`;
+  }
 
   const apiFetch = getFetch();
 
