@@ -114,7 +114,7 @@ export default function App() {
   async function handleAnalyze() {
     setError("");
     setLoading((s) => ({ ...s, analyze: true }));
-    setPipelineStep(prediction ? "llm" : "llm");
+    setPipelineStep("llm");
     try {
       const result = await analyzeStock(symbol, prediction);
       setStockData(result.stockData);
@@ -141,19 +141,30 @@ export default function App() {
   return (
     <div className="app-shell">
       <div className="bg-mesh" />
+      <div className="bg-orbs" aria-hidden="true">
+        <span className="orb orb-1" />
+        <span className="orb orb-2" />
+        <span className="orb orb-3" />
+      </div>
+
       <div className="app">
         <header className="topbar">
           <div className="brand">
-            <div className="brand-mark">AI</div>
+            <div className="brand-mark">
+              <span className="brand-glow" />
+              AX
+            </div>
             <div>
-              <h1>Stock Intelligence Hub</h1>
-              <p>PyTorch Ensemble · LLM Analysis · Real-time Data</p>
+              <h1>
+                Apex <span className="gradient-text">Stock AI</span>
+              </h1>
+              <p>Real-time markets · ML forecast · GPT insights</p>
             </div>
           </div>
           <div className="topbar-pills">
-            <span className="pill">React 18</span>
-            <span className="pill">PyTorch</span>
-            <span className="pill accent">GPT-4o-mini</span>
+            <span className="pill pill-cyan">Live Data</span>
+            <span className="pill pill-violet">ML Fusion</span>
+            <span className="pill pill-amber">GPT-4o-mini</span>
           </div>
         </header>
 

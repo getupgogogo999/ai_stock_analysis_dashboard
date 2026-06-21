@@ -11,10 +11,10 @@ import {
 } from "recharts";
 
 const RANGES = [
-  { key: "1m", label: "1月" },
-  { key: "3m", label: "3月" },
-  { key: "6m", label: "6月" },
-  { key: "1y", label: "1年" },
+  { key: "1m", label: "1M" },
+  { key: "3m", label: "3M" },
+  { key: "6m", label: "6M" },
+  { key: "1y", label: "1Y" },
 ];
 
 function formatPrice(value) {
@@ -42,8 +42,8 @@ function buildChartSeries(historical, predicted) {
         actual: null,
         forecast: p.close,
         isPredicted: true,
-        lstm: p.lstm,
-        gru: p.gru,
+        trend: p.lstm,
+        momentum: p.gru,
       });
     });
   }
@@ -60,16 +60,16 @@ function ChartTooltip({ active, payload }) {
     <div className="chart-tooltip">
       <div className="chart-tooltip-date">
         {p.date}
-        {p.isPredicted && <span className="forecast-tag"> ML Forecast</span>}
+        {p.isPredicted && <span className="forecast-tag"> Forecast</span>}
       </div>
       {p.actual != null && (
-        <div className="chart-tooltip-row">收盘 {formatPrice(p.actual)}</div>
+        <div className="chart-tooltip-row">Close {formatPrice(p.actual)}</div>
       )}
       {p.forecast != null && p.isPredicted && (
         <>
-          <div className="chart-tooltip-row forecast">融合 {formatPrice(p.forecast)}</div>
+          <div className="chart-tooltip-row forecast">Fused {formatPrice(p.forecast)}</div>
           <div className="chart-tooltip-row muted">
-            LSTM {formatPrice(p.lstm)} / GRU {formatPrice(p.gru)}
+            Trend {formatPrice(p.trend)} · Momentum {formatPrice(p.momentum)}
           </div>
         </>
       )}
@@ -86,18 +86,18 @@ export default function StockChart({
   onRangeChange,
   isUp,
 }) {
-  const stroke = isUp ? "#34d399" : "#f87171";
+  const stroke = isUp ? "#2dd4bf" : "#fb7185";
   const series = buildChartSeries(data?.points, prediction?.predicted);
   const splitDate = prediction?.predicted?.[0]?.date;
 
   return (
-    <section className="glass-card chart-card">
+    <section className="glass-card chart-card premium-border panel-cyan">
       <div className="chart-header">
         <div>
-          <h2>{symbol} 智能走势</h2>
-          <p className="subtitle">
-            实线 = 历史收盘 · 虚线 = PyTorch LSTM+GRU 融合预测
-          </p>
+          <h2>
+            {symbol} <span className="gradient-text-sm">Price Action</span>
+          </h2>
+          <p className="subtitle">Solid = historical close · Dashed = ensemble forecast</p>
         </div>
         <div className="range-tabs">
           {RANGES.map((r) => (
@@ -115,37 +115,42 @@ export default function StockChart({
       </div>
 
       <div className="chart-legend">
-        <span><i className="dot actual" /> 历史</span>
-        {prediction && <span><i className="dot forecast" /> ML 预测</span>}
+        <span><i className="dot actual" /> Historical</span>
+        {prediction && <span><i className="dot forecast" /> Forecast</span>}
       </div>
 
       <div className="chart-container">
         {loading ? (
           <div className="chart-placeholder">
             <div className="spinner" />
-            加载走势数据...
+            Loading chart data…
           </div>
         ) : !series.length ? (
-          <div className="chart-placeholder">暂无走势数据</div>
+          <div className="chart-placeholder">No chart data available</div>
         ) : (
-          <ResponsiveContainer width="100%" height={320}>
+          <ResponsiveContainer width="100%" height={340}>
             <ComposedChart data={series} margin={{ top: 8, right: 12, left: 0, bottom: 0 }}>
               <defs>
                 <linearGradient id="chartFillUp" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#34d399" stopOpacity={0.25} />
-                  <stop offset="100%" stopColor="#34d399" stopOpacity={0} />
+                  <stop offset="0%" stopColor="#2dd4bf" stopOpacity={0.35} />
+                  <stop offset="100%" stopColor="#2dd4bf" stopOpacity={0} />
                 </linearGradient>
                 <linearGradient id="chartFillDown" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#f87171" stopOpacity={0.25} />
-                  <stop offset="100%" stopColor="#f87171" stopOpacity={0} />
+                  <stop offset="0%" stopColor="#fb7185" stopOpacity={0.35} />
+                  <stop offset="100%" stopColor="#fb7185" stopOpacity={0} />
+                </linearGradient>
+                <linearGradient id="forecastStroke" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%" stopColor="#22d3ee" />
+                  <stop offset="50%" stopColor="#a78bfa" />
+                  <stop offset="100%" stopColor="#f472b6" />
                 </linearGradient>
               </defs>
-              <CartesianGrid stroke="rgba(148,163,184,0.12)" strokeDasharray="3 3" vertical={false} />
+              <CartesianGrid stroke="rgba(255,255,255,0.06)" strokeDasharray="3 3" vertical={false} />
               <XAxis
                 dataKey="date"
                 tick={{ fill: "#94a3b8", fontSize: 11 }}
                 tickLine={false}
-                axisLine={{ stroke: "rgba(148,163,184,0.2)" }}
+                axisLine={{ stroke: "rgba(255,255,255,0.08)" }}
                 minTickGap={36}
                 tickFormatter={(v) => v.slice(5)}
               />
@@ -161,9 +166,9 @@ export default function StockChart({
               {splitDate && (
                 <ReferenceLine
                   x={splitDate}
-                  stroke="#818cf8"
+                  stroke="#c084fc"
                   strokeDasharray="4 4"
-                  label={{ value: "Forecast →", fill: "#a5b4fc", fontSize: 11, position: "insideTopRight" }}
+                  label={{ value: "Forecast →", fill: "#e9d5ff", fontSize: 11, position: "insideTopRight" }}
                 />
               )}
               <Area
@@ -174,18 +179,18 @@ export default function StockChart({
                 fill={`url(#${isUp ? "chartFillUp" : "chartFillDown"})`}
                 dot={false}
                 connectNulls={false}
-                activeDot={{ r: 4, fill: stroke }}
+                activeDot={{ r: 5, fill: stroke, stroke: "#fff", strokeWidth: 1 }}
               />
               {prediction && (
                 <Line
                   type="monotone"
                   dataKey="forecast"
-                  stroke="#818cf8"
-                  strokeWidth={2.5}
+                  stroke="url(#forecastStroke)"
+                  strokeWidth={3}
                   strokeDasharray="8 5"
-                  dot={{ r: 3, fill: "#818cf8", strokeWidth: 0 }}
+                  dot={{ r: 4, fill: "#a78bfa", strokeWidth: 0 }}
                   connectNulls
-                  activeDot={{ r: 5, fill: "#c4b5fd" }}
+                  activeDot={{ r: 6, fill: "#f0abfc", stroke: "#fff", strokeWidth: 1 }}
                 />
               )}
             </ComposedChart>

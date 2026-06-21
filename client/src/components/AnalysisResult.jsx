@@ -12,15 +12,18 @@ const RISK_CLASS = {
 
 export default function AnalysisResult({ analysis }) {
   return (
-    <section className="glass-card analysis-card">
-      <h2>AI 分析结果</h2>
+    <section className="glass-card analysis-card premium-border panel-rose">
+      <div className="analysis-header">
+        <h2>AI Insight</h2>
+        <span className="analysis-chip">GPT Powered</span>
+      </div>
 
       <div className="badges">
         <span className={`badge ${SENTIMENT_CLASS[analysis.sentiment]}`}>
           {analysis.sentiment}
         </span>
         <span className={`badge ${RISK_CLASS[analysis.risk_level]}`}>
-          风险: {analysis.risk_level}
+          Risk: {analysis.risk_level}
         </span>
       </div>
 

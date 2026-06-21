@@ -15,9 +15,9 @@ export default function StockInput({
   const busy = loading.fetch || loading.analyze || loading.predict;
 
   return (
-    <form className="glass-card stock-input" onSubmit={handleSubmit}>
+    <form className="glass-card stock-input premium-border" onSubmit={handleSubmit}>
       <div className="input-header">
-        <label htmlFor="symbol">股票代码</label>
+        <label htmlFor="symbol">Ticker Symbol</label>
         <span className="input-chip">US Equities</span>
       </div>
       <div className="input-row">
@@ -30,7 +30,7 @@ export default function StockInput({
           disabled={busy}
         />
         <button type="submit" className="btn-ghost" disabled={disabled || busy}>
-          {loading.fetch ? "加载中..." : "获取行情"}
+          {loading.fetch ? "Loading…" : "Get Quote"}
         </button>
         <button
           type="button"
@@ -38,7 +38,7 @@ export default function StockInput({
           onClick={onPredict}
           disabled={disabled || busy}
         >
-          {loading.predict ? "训练中..." : "ML 预测"}
+          {loading.predict ? "Forecasting…" : "ML Forecast"}
         </button>
         <button
           type="button"
@@ -46,10 +46,10 @@ export default function StockInput({
           onClick={onAnalyze}
           disabled={disabled || busy}
         >
-          {loading.analyze ? "分析中..." : "AI 分析"}
+          {loading.analyze ? "Analyzing…" : "AI Analyze"}
         </button>
       </div>
-      <p className="hint">Pipeline: Finnhub → PyTorch LSTM+GRU → GPT-4o-mini → Supabase</p>
+      <p className="hint">Pipeline: Market Data → Dual-Model Fusion → GPT → Supabase</p>
     </form>
   );
 }
