@@ -4,6 +4,8 @@ const express = require("express");
 const cors = require("cors");
 const path = require("path");
 const { validateEnvOnStartup } = require("./config/env");
+const { checkMlHealth } = require("./services/mlService");
+const { ensureMlService, stopMlProcess } = require("./mlProcess");
 const apiRouter = require("./routes/api");
 
 const app = express();
@@ -32,7 +34,18 @@ app.use((err, _req, res, _next) => {
   res.status(500).json({ success: false, error: "Internal server error" });
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
   validateEnvOnStartup();
+  await ensureMlService(checkMlHealth);
   console.log(`Server running on http://localhost:${PORT}`);
+});
+
+process.on("SIGINT", () => {
+  stopMlProcess();
+  process.exit(0);
+});
+
+process.on("SIGTERM", () => {
+  stopMlProcess();
+  process.exit(0);
 });

@@ -53,7 +53,9 @@ git status   # 确认 .env 不在待提交列表中
 | 功能 | 说明 |
 |------|------|
 | 数据获取 | 输入股票代码（如 AAPL），调用 Finnhub 免费 API 获取实时行情 |
-| AI 分析 | 点击按钮调用 OpenAI LLM，返回严格 JSON 格式分析结果 |
+| K 线图表 | 历史走势 + PyTorch 融合预测虚线（本地） |
+| ML 预测 | LSTM + GRU 模型缝合，预测未来 10 日 K 线（本地 PyTorch） |
+| AI 分析 | 点击按钮调用 OpenAI LLM，可结合 ML 预测结果 |
 | 数据存储 | 分析结果自动写入 Supabase `stock_analyses` 表 |
 | 历史记录 | 页面底部展示最近分析记录 |
 
@@ -63,6 +65,7 @@ git status   # 确认 .env 不在待提交列表中
 - **后端**：Node.js + Express
 - **股票数据**：Finnhub API（免费）
 - **LLM**：OpenAI API（`response_format: json_object` 强制 JSON 输出）
+- **ML**：PyTorch LSTM + GRU Ensemble（本地 FastAPI，开发时后端自动启动）
 - **数据库**：Supabase (PostgreSQL)
 - **部署**：Render.com
 
@@ -93,17 +96,26 @@ cp .env.example .env
 
 在 Supabase SQL Editor 中执行 `supabase/schema.sql`。
 
-### 4. 启动开发服务器
+### 4. 安装 PyTorch ML 依赖（首次）
 
 ```bash
-# 终端 1：后端 (port 3001)
-npm run dev:server
-
-# 终端 2：前端 (port 5173，自动代理 /api)
-npm run dev:client
+npm run setup:ml
 ```
 
+### 5. 一键启动（推荐）
+
+```bash
+npm run dev
+# 或 Windows 双击 start-dev.bat
+```
+
+后端会自动启动 PyTorch ML 服务（:8000），前端 :5173 代理 `/api`。
+
 浏览器访问 http://localhost:5173
+
+**演示顺序：** 获取行情 → ML 预测 → AI 分析
+
+> ML 预测仅支持本地开发；Render 线上部署不含 PyTorch 服务。
 
 ## 部署到 Render
 
