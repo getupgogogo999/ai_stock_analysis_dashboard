@@ -1,7 +1,7 @@
 const SENTIMENT_LABEL = {
-  Bullish: "看涨 Bullish",
-  Neutral: "中性 Neutral",
-  Bearish: "看跌 Bearish",
+  Bullish: "看涨",
+  Neutral: "中性",
+  Bearish: "看跌",
 };
 
 const SENTIMENT_CLASS = {
@@ -11,9 +11,9 @@ const SENTIMENT_CLASS = {
 };
 
 const RISK_LABEL = {
-  Low: "低 Low",
-  Medium: "中 Medium",
-  High: "高 High",
+  Low: "低",
+  Medium: "中",
+  High: "高",
 };
 
 const RISK_CLASS = {
