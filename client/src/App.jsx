@@ -57,7 +57,7 @@ export default function App() {
   const checkMl = useCallback(async () => {
     try {
       const data = await fetchMlHealth();
-      setMlOnline(data.online);
+      setMlOnline(Boolean(data.online));
     } catch {
       setMlOnline(false);
     }

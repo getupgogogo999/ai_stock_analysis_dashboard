@@ -4,7 +4,7 @@ const express = require("express");
 const cors = require("cors");
 const path = require("path");
 const { validateEnvOnStartup } = require("./config/env");
-const { checkMlHealth } = require("./services/mlService");
+const { checkPyTorchHealth } = require("./services/mlService");
 const { ensureMlService, stopMlProcess } = require("./mlProcess");
 const apiRouter = require("./routes/api");
 
@@ -36,7 +36,7 @@ app.use((err, _req, res, _next) => {
 
 app.listen(PORT, async () => {
   validateEnvOnStartup();
-  await ensureMlService(checkMlHealth);
+  await ensureMlService(checkPyTorchHealth);
   console.log(`Server running on http://localhost:${PORT}`);
 });
 

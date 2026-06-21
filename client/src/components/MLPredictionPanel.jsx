@@ -3,8 +3,8 @@ export default function MLPredictionPanel({ prediction, loading }) {
     return (
       <section className="glass-card ml-panel loading-panel">
         <div className="pulse-ring" />
-        <h3>PyTorch 训练中...</h3>
-        <p>LSTM + GRU 双模型融合，首次约 15–30 秒</p>
+        <h3>ML 融合预测</h3>
+        <p>LSTM + GRU 双模型融合，云端/本地均可运行</p>
       </section>
     );
   }
@@ -19,15 +19,18 @@ export default function MLPredictionPanel({ prediction, loading }) {
     );
   }
 
-  const { metrics, models, fusion, framework, horizon } = prediction;
+  const { metrics, models, fusion, framework, horizon, engine } = prediction;
   const isUp = metrics.direction === "up";
 
   return (
     <section className="glass-card ml-panel">
       <div className="ml-panel-header">
         <div>
-          <h3>PyTorch 融合预测</h3>
-          <p className="subtitle">{framework} · {models?.join(" + ")} · {fusion?.replace(/_/g, " ")}</p>
+          <h3>ML 融合预测</h3>
+          <p className="subtitle">
+            {framework}
+            {engine ? ` · ${engine}` : ""} · {models?.join(" + ")} · {fusion?.replace(/_/g, " ")}
+          </p>
         </div>
         <span className={`direction-badge ${isUp ? "up" : "down"}`}>
           {isUp ? "▲ Bullish" : "▼ Bearish"}

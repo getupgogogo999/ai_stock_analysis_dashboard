@@ -15,7 +15,7 @@ export default function PipelineStrip({ activeStep = "data", mlOnline = false })
           <p>Data → PyTorch Model Stitching → LLM → Storage</p>
         </div>
         <span className={`ml-status ${mlOnline ? "online" : "offline"}`}>
-          {mlOnline ? "PyTorch Online" : "PyTorch Offline"}
+          {mlOnline ? "ML Engine Online" : "ML Engine Offline"}
         </span>
       </div>
       <div className="pipeline-steps">

@@ -7,8 +7,8 @@ const { fetchMlPrediction, checkMlHealth } = require("../services/mlService");
 const router = express.Router();
 
 router.get("/ml/health", async (_req, res) => {
-  const online = await checkMlHealth();
-  res.json({ success: true, data: { online, framework: "PyTorch LSTM+GRU Ensemble" } });
+  const status = await checkMlHealth();
+  res.json({ success: true, data: status });
 });
 
 router.get("/stock/:symbol/predict", async (req, res) => {

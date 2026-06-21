@@ -115,7 +115,8 @@ npm run dev
 
 **演示顺序：** 获取行情 → ML 预测 → AI 分析
 
-> ML 预测仅支持本地开发；Render 线上部署不含 PyTorch 服务。
+> ML 预测在 **Render 线上默认可用**（内置 Cloud Ensemble，无需本地 PyTorch）。  
+> 本地开发可选启动 PyTorch 服务（`npm run dev:ml` 或由后端自动拉起）获得真实 PyTorch 训练。
 
 ## 部署到 Render
 

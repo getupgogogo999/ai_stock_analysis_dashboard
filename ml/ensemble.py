@@ -5,10 +5,11 @@ LSTM + GRU 双模型融合预测（Model Stitching / Ensemble）
 - 融合：加权平均 (0.5 / 0.5)
 """
 
-from __future__ import annotations
-
+import os
 from datetime import datetime, timedelta
 from typing import Any
+
+EPOCHS = int(os.getenv("TRAIN_EPOCHS", "12"))
 
 import numpy as np
 import torch
@@ -84,8 +85,8 @@ def run_ensemble_forecast(
 
     lstm = LSTMForecaster()
     gru = GRUForecaster()
-    _train_one_step(lstm, X, y, epochs=28)
-    _train_one_step(gru, X, y, epochs=28)
+    _train_one_step(lstm, X, y, epochs=EPOCHS)
+    _train_one_step(gru, X, y, epochs=EPOCHS)
 
     window = norm[-seq_len:].copy()
     last_date = datetime.strptime(dates[-1], "%Y-%m-%d")
