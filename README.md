@@ -96,8 +96,6 @@ npm run dev
 # 或 Windows 双击 start-dev.bat
 ```
 
-浏览器访问 http://localhost:5173
-
 **演示顺序：** 获取行情 → ML 预测 → AI 分析
 
 ### 5. 可选：本地 ML 服务依赖
