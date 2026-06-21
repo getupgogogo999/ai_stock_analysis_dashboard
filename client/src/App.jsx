@@ -156,7 +156,7 @@ export default function App() {
             </div>
             <div>
               <h1>
-                智股 <span className="gradient-text">AI 仪表盘</span>
+                AI <span className="gradient-text">股票分析台</span>
               </h1>
               <p>实时行情 · ML 融合预测 · GPT 智能分析</p>
             </div>
